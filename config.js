@@ -2,6 +2,7 @@ module.exports = {
     connect: {
         port: process.env.PORT || 1200, // 监听端口
         socket: process.env.SOCKET || null, // 监听 Unix Socket, null 为禁用
+        disabled: process.env.CONNECT_DISABLED, // 禁用监听，测试用
     },
     cacheType: process.env.CACHE_TYPE || 'memory', // 缓存类型，支持 'memory' 和 'redis'，设为空可以禁止缓存
     cacheExpire: process.env.CACHE_EXPIRE || 5 * 60, // 缓存时间，单位为秒
@@ -10,6 +11,8 @@ module.exports = {
     requestRetry: process.env.REQUEST_RETRY || 2, // 请求失败重试次数
     // 是否显示 Debug 信息，取值 boolean 'false' 'key' ，取值为 'false' false 时永远不显示，取值为 'key' 时带上 ?debug=key 显示
     debugInfo: process.env.DEBUG_INFO || true,
+    sentry: process.env.SENTRY || '', // 使用 sentry 进行错误追踪，这里是 sentry 提供的 DSN 链接
+    titleLengthLimit: process.env.TITLE_LENGTH_LIMIT || 100,
     redis: {
         url: process.env.REDIS_URL || 'redis://localhost:6379/',
         options: {
@@ -41,4 +44,13 @@ module.exports = {
     github: {
         access_token: process.env.GITHUB_ACCESS_TOKEN,
     },
+    imgur: {
+        clientId: process.env.IMGUR_CLIRNT_ID,
+    },
+    authentication: {
+        name: process.env.HTTP_BASIC_AUTH_NAME || 'usernam3',
+        pass: process.env.HTTP_BASIC_AUTH_PASS || 'passw0rd',
+    },
+    puppeteerWSEndpoint: process.env.PUPPETEER_WS_ENDPOINT,
+    loggerLevel: process.env.LOGGER_LEVEL || 'info',
 };

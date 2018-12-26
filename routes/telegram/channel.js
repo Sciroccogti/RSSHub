@@ -31,7 +31,7 @@ module.exports = async (ctx) => {
         });
     }
 
-    const data = response.data.result.filter((item) => item.channel_post && item.channel_post.chat && item.channel_post.chat.username === username).reverse();
+    const data = response.data.result.filter((item) => item.channel_post && item.channel_post.chat && (item.channel_post.chat.username === username || (item.channel_post.chat.id || '').toString() === username)).reverse();
 
     let title;
     let post;
@@ -83,7 +83,7 @@ module.exports = async (ctx) => {
             }
 
             return {
-                title: text.length > 24 ? text.slice(0, 24) + '...' : text,
+                title: text,
                 description: html,
                 pubDate: new Date(item.date * 1000).toUTCString(),
                 link: `https://t.me/${username}/${item.message_id}`,

@@ -1,17 +1,13 @@
 const axios = require('../../utils/axios');
 const cheerio = require('cheerio');
-const config = require('../../config');
 
 const sourceTimezoneOffset = -8;
 module.exports = async (ctx) => {
     const category = ctx.params.category;
-    const url = `https://www.g-cores.com/categories/${category}/originals`;
+    const url = `https://www.gcores.com/categories/${category}/originals`;
     const res = await axios({
         method: 'get',
         url: url,
-        headers: {
-            'User-Agent': config.ua,
-        },
     });
     const data = res.data;
     let $ = cheerio.load(data);
@@ -42,9 +38,6 @@ module.exports = async (ctx) => {
                 itemRes = await axios({
                     method: 'get',
                     url: itemUrl,
-                    headers: {
-                        'User-Agent': config.ua,
-                    },
                 });
             } catch (e) {
                 return Promise.resolve();

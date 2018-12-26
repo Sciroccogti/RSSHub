@@ -1,6 +1,5 @@
 const axios = require('../../utils/axios');
 const cheerio = require('cheerio');
-const config = require('../../config');
 
 module.exports = async (ctx) => {
     const id = ctx.params.id;
@@ -9,7 +8,6 @@ module.exports = async (ctx) => {
         method: 'get',
         url: `http://www.iqiyi.com/${id}.html`,
         headers: {
-            'User-Agent': config.ua,
             Host: 'www.iqiyi.com',
             Referer: `http://www.iqiyi.com/${id}.html`,
         },
@@ -21,7 +19,7 @@ module.exports = async (ctx) => {
     const description = $('span[data-moreorless="moreinfo"][itemprop="description"] span')
         .text()
         .split('\n')[0];
-    const list = $('div[data-block-name="图文选集区"]').find('ul.site-piclist li');
+    const list = $('li[data-albumlist-elem="playItem"]');
 
     ctx.state.data = {
         title: $('title')
@@ -32,17 +30,26 @@ module.exports = async (ctx) => {
         item:
             list &&
             list
-                .map((index, item) => ({
-                    title: `${$(item)
+                .map((index, item) => {
+                    const episode = $(item)
                         .find('p.site-piclist_info_title a')
-                        .text()}`,
-                    description: `<img referrerpolicy="no-referrer" src="${$(item)
-                        .find('img')
-                        .attr('src')}">`,
-                    link: $(item)
-                        .find('a')
-                        .attr('href'),
-                }))
+                        .text()
+                        .trim();
+                    const describe = $(item)
+                        .find('p.site-piclist_info_describe a')
+                        .text();
+                    const title = `${episode}-${describe}`;
+
+                    return {
+                        title,
+                        description: `<img referrerpolicy="no-referrer" src="${$(item)
+                            .find('.site-piclist_pic .site-piclist_pic_link img')
+                            .attr('src')}">`,
+                        link: $(item)
+                            .find('.site-piclist_pic .site-piclist_pic_link')
+                            .attr('href'),
+                    };
+                })
                 .get()
                 .reverse(),
     };
