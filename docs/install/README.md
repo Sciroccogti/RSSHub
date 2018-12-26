@@ -252,6 +252,15 @@ gcloud app deploy
 
 部署完成后可访问您的 Google App Engine URL 查看部署情况.
 
+### 更新
+
+在 `RSSHub` 文件夹中：
+
+```bash
+$ git pull
+$ gcloud app deploy
+```
+
 ## 配置
 
 ### 应用配置
